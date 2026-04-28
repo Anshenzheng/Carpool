@@ -1,0 +1,136 @@
+<div class="page-header">
+  <div class="container">
+    <h1>用户注册</h1>
+    <p>创建您的账户，开始便捷拼车出行</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="auth-container">
+    <div class="card">
+      <div class="form-header">
+        <h2>注册账户</h2>
+        <p>填写以下信息完成注册</p>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="username">用户名 *</label>
+            <input 
+              type="text" 
+              id="username" 
+              formControlName="username" 
+              class="form-control"
+              placeholder="3-50个字符"
+            >
+            <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="text-danger text-small">
+              <span *ngIf="registerForm.get('username')?.errors?.['required']">请输入用户名</span>
+              <span *ngIf="registerForm.get('username')?.errors?.['minlength'] || registerForm.get('username')?.errors?.['maxlength']">用户名长度需在3-50个字符之间</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="realName">真实姓名 *</label>
+            <input 
+              type="text" 
+              id="realName" 
+              formControlName="realName" 
+              class="form-control"
+              placeholder="请输入真实姓名"
+            >
+            <div *ngIf="registerForm.get('realName')?.invalid && registerForm.get('realName')?.touched" class="text-danger text-small">
+              请输入真实姓名
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">密码 *</label>
+            <input 
+              type="password" 
+              id="password" 
+              formControlName="password" 
+              class="form-control"
+              placeholder="至少6个字符"
+            >
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger text-small">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">请输入密码</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">密码至少6个字符</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">确认密码 *</label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              formControlName="confirmPassword" 
+              class="form-control"
+              placeholder="再次输入密码"
+            >
+            <div *ngIf="(registerForm.get('confirmPassword')?.invalid || registerForm.errors?.['passwordMismatch']) && registerForm.get('confirmPassword')?.touched" class="text-danger text-small">
+              <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">请确认密码</span>
+              <span *ngIf="registerForm.errors?.['passwordMismatch']">两次输入的密码不一致</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">手机号 *</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              formControlName="phone" 
+              class="form-control"
+              placeholder="请输入手机号"
+            >
+            <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="text-danger text-small">
+              <span *ngIf="registerForm.get('phone')?.errors?.['required']">请输入手机号</span>
+              <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">请输入正确的手机号</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">邮箱 (可选)</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email" 
+              class="form-control"
+              placeholder="请输入邮箱"
+            >
+            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger text-small">
+              请输入正确的邮箱格式
+            </div>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-full"
+          [disabled]="loading || registerForm.invalid"
+        >
+          <span *ngIf="!loading">注册</span>
+          <span *ngIf="loading" class="loading-inline">
+            <span class="spinner-small"></span> 注册中...
+          </span>
+        </button>
+      </form>
+
+      <div class="form-footer">
+        <p>已有账户？<a routerLink="/login">立即登录</a></p>
+      </div>
+    </div>
+  </div>
+</div>

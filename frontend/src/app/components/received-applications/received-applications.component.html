@@ -1,0 +1,93 @@
+<div class="page-header">
+  <div class="container">
+    <h1>收到的申请</h1>
+    <p>查看和管理您收到的拼车申请</p>
+  </div>
+</div>
+
+<div class="container">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && applications.length === 0" class="empty-state">
+    <div class="empty-icon">📬</div>
+    <h3>暂无收到的申请</h3>
+    <p>您还没有收到任何拼车申请</p>
+  </div>
+
+  <div *ngIf="!loading && applications.length > 0" class="applications-list">
+    <div *ngFor="let app of applications" class="application-item card">
+      <div class="application-main">
+        <div class="post-info">
+          <div class="route">
+            <span class="location">{{ app.post.departure }}</span>
+            <span class="arrow">→</span>
+            <span class="location">{{ app.post.destination }}</span>
+          </div>
+          <span class="post-time">{{ formatDateTime(app.post.departureTime) }}</span>
+        </div>
+        
+        <div class="applicant-info">
+          <h4>申请人信息</h4>
+          <div class="info-row">
+            <span class="info-label">姓名：</span>
+            <span class="info-value">{{ app.applicantName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">电话：</span>
+            <span class="info-value">{{ app.applicantPhone }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">人数：</span>
+            <span class="info-value">{{ app.passengers }} 人</span>
+          </div>
+        </div>
+        
+        <div class="status-info">
+          <span class="badge" [ngClass]="getStatusBadgeClass(app.status)">
+            {{ getStatusText(app.status) }}
+          </span>
+          <span class="apply-time">申请时间: {{ formatDateTime(app.createdAt) }}</span>
+        </div>
+        
+        <div *ngIf="app.rejectReason" class="reject-reason">
+          <strong>拒绝原因：</strong>{{ app.rejectReason }}
+        </div>
+      </div>
+      
+      <div *ngIf="app.status === 0" class="application-actions">
+        <button class="btn btn-success btn-small" (click)="confirmApplication(app)">
+          确认
+        </button>
+        <button class="btn btn-danger btn-small" (click)="openRejectModal(app.id)">
+          拒绝
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showRejectModal" class="modal-overlay" (click)="closeRejectModal()">
+    <div class="modal-content card" (click)="$event.stopPropagation()">
+      <h3>拒绝申请</h3>
+      <div class="form-group">
+        <label for="rejectReason">拒绝原因</label>
+        <textarea 
+          id="rejectReason" 
+          [(ngModel)]="rejectReason" 
+          class="form-control"
+          rows="3"
+          placeholder="请输入拒绝原因（可选）"
+        ></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeRejectModal()">取消</button>
+        <button class="btn btn-danger" (click)="submitReject()">确认拒绝</button>
+      </div>
+    </div>
+  </div>
+</div>

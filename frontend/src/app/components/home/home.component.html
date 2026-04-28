@@ -1,0 +1,109 @@
+<div class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1>社区拼车出行系统</h1>
+      <p>便捷、安全、环保的社区拼车服务</p>
+      <div class="hero-buttons">
+        <a routerLink="/carpool" class="btn btn-primary btn-large">查看拼车</a>
+        <a routerLink="/create-post" class="btn btn-outline btn-large">发布拼车</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>为什么选择我们</h2>
+      <p>为社区居民提供最优质的拼车出行服务</p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚗</div>
+        <h3>便捷出行</h3>
+        <p>一键发布拼车信息，轻松找到同行伙伴，告别孤单出行</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>省钱实惠</h3>
+        <p>与邻居拼车出行，分摊油费过路费，出行成本大幅降低</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>绿色环保</h3>
+        <p>减少私家车出行，降低碳排放，共同守护我们的社区环境</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>安全可靠</h3>
+        <p>实名认证+审核机制，确保每一次拼车都安全有保障</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="latest-posts-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>最新拼车信息</h2>
+      <p>查看社区邻居发布的最新拼车信息</p>
+    </div>
+    
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+    </div>
+    
+    <div *ngIf="!loading && latestPosts.length === 0" class="text-center mt-3">
+      <p class="text-light">暂无拼车信息</p>
+    </div>
+    
+    <div *ngIf="!loading && latestPosts.length > 0" class="posts-grid">
+      <div *ngFor="let post of latestPosts" class="post-card card" routerLink="/carpool/{{ post.id }}">
+        <div class="post-header">
+          <h3>{{ post.departure }} → {{ post.destination }}</h3>
+          <span class="badge badge-success">已发布</span>
+        </div>
+        
+        <div class="post-info">
+          <div class="info-item">
+            <span class="info-icon">⏰</span>
+            <span>{{ formatDateTime(post.departureTime) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">👥</span>
+            <span>余座 {{ post.availableSeats }} / {{ post.seats }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">📞</span>
+            <span>{{ post.contactName }}</span>
+          </div>
+        </div>
+        
+        <div *ngIf="post.description" class="post-desc">
+          {{ post.description }}
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-3">
+      <a routerLink="/carpool" class="btn btn-secondary">查看全部拼车</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <span class="logo-icon">🚗</span>
+        <span class="logo-text">社区拼车出行系统</span>
+      </div>
+      <p>为社区居民提供便捷、安全的拼车出行服务</p>
+      <p class="copyright">© 2024 社区拼车系统. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

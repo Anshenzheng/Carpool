@@ -1,0 +1,70 @@
+<div class="page-header">
+  <div class="container">
+    <h1>拼车列表</h1>
+    <p>查看社区内所有可用的拼车信息</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="search-section card">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <div class="search-row">
+        <div class="search-item">
+          <label>出发地</label>
+          <input type="text" formControlName="departure" class="form-control" placeholder="输入出发地">
+        </div>
+        <div class="search-item">
+          <label>目的地</label>
+          <input type="text" formControlName="destination" class="form-control" placeholder="输入目的地">
+        </div>
+        <div class="search-item">
+          <label>&nbsp;</label>
+          <div class="search-buttons">
+            <button type="submit" class="btn btn-primary">搜索</button>
+            <button type="button" class="btn btn-secondary" (click)="searchForm.reset(); filteredPosts = posts">重置</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && filteredPosts.length === 0" class="empty-state">
+    <div class="empty-icon">🚗</div>
+    <h3>暂无拼车信息</h3>
+    <p>当前没有可用的拼车信息，您可以发布一个</p>
+    <a routerLink="/create-post" class="btn btn-primary">发布拼车</a>
+  </div>
+
+  <div *ngIf="!loading && filteredPosts.length > 0" class="posts-list">
+    <div *ngFor="let post of filteredPosts" class="post-item card" routerLink="/carpool/{{ post.id }}">
+      <div class="post-main">
+        <div class="route">
+          <span class="location">{{ post.departure }}</span>
+          <span class="arrow">→</span>
+          <span class="location">{{ post.destination }}</span>
+        </div>
+        <div class="post-details">
+          <span class="detail-item">
+            <span class="detail-icon">⏰</span>
+            {{ formatDateTime(post.departureTime) }}
+          </span>
+          <span class="detail-item">
+            <span class="detail-icon">👥</span>
+            余座 {{ post.availableSeats }} / {{ post.seats }}
+          </span>
+          <span class="detail-item">
+            <span class="detail-icon">👤</span>
+            {{ post.contactName }}
+          </span>
+        </div>
+      </div>
+      <div class="post-actions">
+        <span class="badge badge-success">已发布</span>
+      </div>
+    </div>
+  </div>
+</div>
