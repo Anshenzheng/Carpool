@@ -23,6 +23,7 @@ import { AdminStatisticsComponent } from './components/admin-statistics/admin-st
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { UserOnlyGuard } from './guards/user-only.guard';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { AdminGuard } from './guards/admin.guard';
       multi: true
     },
     AuthGuard,
-    AdminGuard
+    AdminGuard,
+    UserOnlyGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -12,7 +12,7 @@
         <a routerLink="/home" routerLinkActive="active">首页</a>
         <a routerLink="/carpool" routerLinkActive="active">拼车列表</a>
         
-        <ng-container *ngIf="isLoggedIn">
+        <ng-container *ngIf="isLoggedIn && !isAdmin">
           <a routerLink="/create-post" routerLinkActive="active">发布拼车</a>
           <a routerLink="/my-posts" routerLinkActive="active">我的发布</a>
           <a routerLink="/my-applications" routerLinkActive="active">我的申请</a>
