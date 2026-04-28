@@ -1,0 +1,74 @@
+<div class="page-header">
+  <div class="container">
+    <h1>我的发布</h1>
+    <p>查看和管理您发布的拼车信息</p>
+  </div>
+</div>
+
+<div class="container">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && posts.length === 0" class="empty-state">
+    <div class="empty-icon">📝</div>
+    <h3>暂无发布的拼车</h3>
+    <p>您还没有发布任何拼车信息</p>
+    <a routerLink="/create-post" class="btn btn-primary">发布拼车</a>
+  </div>
+
+  <div *ngIf="!loading && posts.length > 0" class="posts-list">
+    <div *ngFor="let post of posts" class="post-item card">
+      <div class="post-main">
+        <div class="route">
+          <span class="location">{{ post.departure }}</span>
+          <span class="arrow">→</span>
+          <span class="location">{{ post.destination }}</span>
+        </div>
+        <div class="post-details">
+          <span class="detail-item">
+            <span class="detail-icon">⏰</span>
+            {{ formatDateTime(post.departureTime) }}
+          </span>
+          <span class="detail-item">
+            <span class="detail-icon">👥</span>
+            余座 {{ post.availableSeats }} / {{ post.seats }}
+          </span>
+          <span class="detail-item">
+            <span class="badge" [ngClass]="getStatusBadgeClass(post.status)">
+              {{ getStatusText(post.status) }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="post-actions">
+        <a 
+          *ngIf="canCancel(post)" 
+          class="btn btn-danger btn-small"
+          (click)="cancelPost(post)"
+        >
+          取消
+        </a>
+        <a 
+          *ngIf="!canCancel(post) && post.status === 1" 
+          class="btn btn-secondary btn-small"
+          title="出发前30分钟内无法取消"
+          disabled
+        >
+          无法取消
+        </a>
+        <a 
+          [routerLink]="['/received-applications']" 
+          class="btn btn-primary btn-small"
+          *ngIf="post.status === 1"
+        >
+          查看申请
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

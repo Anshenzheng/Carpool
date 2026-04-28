@@ -1,0 +1,29 @@
+<div class="page-header">
+  <div class="container">
+    <h1>管理后台</h1>
+    <p>管理拼车信息、审核发布和统计数据</p>
+  </div>
+</div>
+
+<div class="admin-container">
+  <div class="admin-sidebar card">
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/audit" routerLinkActive="active">
+        <span class="nav-icon">📋</span>
+        审核管理
+      </a>
+      <a routerLink="/admin/posts" routerLinkActive="active">
+        <span class="nav-icon">🚗</span>
+        拼车管理
+      </a>
+      <a routerLink="/admin/statistics" routerLinkActive="active">
+        <span class="nav-icon">📊</span>
+        数据统计
+      </a>
+    </nav>
+  </div>
+
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

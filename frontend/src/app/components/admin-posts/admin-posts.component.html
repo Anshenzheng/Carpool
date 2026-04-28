@@ -1,0 +1,98 @@
+<div class="section-header">
+  <h2>拼车管理</h2>
+  <p>管理所有拼车信息，可下架违规或过期信息</p>
+</div>
+
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!loading && errorMessage" class="alert alert-error">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="!loading && posts.length === 0" class="empty-state">
+  <div class="empty-icon">🚗</div>
+  <h3>暂无拼车信息</h3>
+  <p>当前没有拼车信息</p>
+</div>
+
+<div *ngIf="!loading && posts.length > 0" class="posts-table">
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>路线信息</th>
+          <th>出发时间</th>
+          <th>发布人</th>
+          <th>座位数</th>
+          <th>状态</th>
+          <th>发布时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>
+            <div class="route-cell">
+              <span class="location">{{ post.departure }}</span>
+              <span class="arrow">→</span>
+              <span class="location">{{ post.destination }}</span>
+            </div>
+          </td>
+          <td>{{ formatDateTime(post.departureTime) }}</td>
+          <td>{{ post.contactName }}</td>
+          <td>{{ post.availableSeats }} / {{ post.seats }}</td>
+          <td>
+            <span class="badge" [ngClass]="getStatusBadgeClass(post.status)">
+              {{ getStatusText(post.status) }}
+            </span>
+          </td>
+          <td>{{ formatDateTime(post.createdAt) }}</td>
+          <td>
+            <div class="action-buttons">
+              <button 
+                *ngIf="canTakeDown(post)"
+                class="btn btn-danger btn-small"
+                (click)="openTakeDownModal(post)"
+              >
+                下架
+              </button>
+              <span 
+                *ngIf="!canTakeDown(post)"
+                class="text-light text-small"
+              >
+                -
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="showTakeDownModal" class="modal-overlay" (click)="closeTakeDownModal()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <h3>下架拼车信息</h3>
+    <div class="post-info">
+      <p><strong>路线：</strong>{{ selectedPost?.departure }} → {{ selectedPost?.destination }}</p>
+      <p><strong>出发时间：</strong>{{ formatDateTime(selectedPost?.departureTime) }}</p>
+      <p><strong>发布人：</strong>{{ selectedPost?.contactName }}</p>
+    </div>
+    <div class="form-group">
+      <label for="takeDownReason">下架原因</label>
+      <textarea 
+        id="takeDownReason" 
+        [(ngModel)]="takeDownReason" 
+        class="form-control"
+        rows="3"
+        placeholder="请输入下架原因（可选）"
+      ></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closeTakeDownModal()">取消</button>
+      <button class="btn btn-danger" (click)="submitTakeDown()">确认下架</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="section-header">
+  <h2>待审核列表</h2>
+  <p>审核用户发布的拼车信息</p>
+</div>
+
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!loading && errorMessage" class="alert alert-error">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="!loading && posts.length === 0" class="empty-state">
+  <div class="empty-icon">✅</div>
+  <h3>暂无待审核内容</h3>
+  <p>所有拼车信息已审核完成</p>
+</div>
+
+<div *ngIf="!loading && posts.length > 0" class="posts-table">
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>路线信息</th>
+          <th>出发时间</th>
+          <th>发布人</th>
+          <th>座位数</th>
+          <th>发布时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>
+            <div class="route-cell">
+              <span class="location">{{ post.departure }}</span>
+              <span class="arrow">→</span>
+              <span class="location">{{ post.destination }}</span>
+            </div>
+          </td>
+          <td>{{ formatDateTime(post.departureTime) }}</td>
+          <td>{{ post.contactName }}</td>
+          <td>{{ post.seats }} 座</td>
+          <td>{{ formatDateTime(post.createdAt) }}</td>
+          <td>
+            <div class="action-buttons">
+              <button 
+                class="btn btn-success btn-small"
+                (click)="openAuditModal(post, 'approve')"
+              >
+                通过
+              </button>
+              <button 
+                class="btn btn-danger btn-small"
+                (click)="openAuditModal(post, 'reject')"
+              >
+                拒绝
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="showAuditModal" class="modal-overlay" (click)="closeAuditModal()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <h3>
+      {{ auditAction === 'approve' ? '审核通过' : '审核拒绝' }}
+    </h3>
+    <div class="post-info">
+      <p><strong>路线：</strong>{{ selectedPost?.departure }} → {{ selectedPost?.destination }}</p>
+      <p><strong>出发时间：</strong>{{ formatDateTime(selectedPost?.departureTime) }}</p>
+      <p><strong>发布人：</strong>{{ selectedPost?.contactName }}</p>
+    </div>
+    <div class="form-group">
+      <label for="auditRemark">审核备注 {{ auditAction === 'approve' ? '(可选)' : '' }}</label>
+      <textarea 
+        id="auditRemark" 
+        [(ngModel)]="auditRemark" 
+        class="form-control"
+        rows="3"
+        [placeholder]="auditAction === 'approve' ? '请输入审核备注（可选）' : '请输入拒绝原因'"
+      ></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closeAuditModal()">取消</button>
+      <button 
+        class="btn"
+        [ngClass]="auditAction === 'approve' ? 'btn-success' : 'btn-danger'"
+        (click)="submitAudit()"
+      >
+        确认{{ auditAction === 'approve' ? '通过' : '拒绝' }}
+      </button>
+    </div>
+  </div>
+</div>

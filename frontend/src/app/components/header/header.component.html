@@ -1,0 +1,42 @@
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a routerLink="/home">
+          <span class="logo-icon">🚗</span>
+          <span class="logo-text">社区拼车</span>
+        </a>
+      </div>
+      
+      <nav class="nav">
+        <a routerLink="/home" routerLinkActive="active">首页</a>
+        <a routerLink="/carpool" routerLinkActive="active">拼车列表</a>
+        
+        <ng-container *ngIf="isLoggedIn">
+          <a routerLink="/create-post" routerLinkActive="active">发布拼车</a>
+          <a routerLink="/my-posts" routerLinkActive="active">我的发布</a>
+          <a routerLink="/my-applications" routerLinkActive="active">我的申请</a>
+          <a routerLink="/received-applications" routerLinkActive="active">收到的申请</a>
+        </ng-container>
+        
+        <ng-container *ngIf="isAdmin">
+          <a routerLink="/admin" routerLinkActive="active">管理后台</a>
+        </ng-container>
+      </nav>
+      
+      <div class="user-actions">
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/login" class="btn btn-outline">登录</a>
+          <a routerLink="/register" class="btn btn-primary">注册</a>
+        </ng-container>
+        
+        <ng-container *ngIf="isLoggedIn">
+          <div class="user-info">
+            <span class="user-name">你好, {{ currentUser?.realName }}</span>
+            <button class="btn btn-secondary" (click)="logout()">退出</button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</header>

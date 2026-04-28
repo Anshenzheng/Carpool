@@ -1,0 +1,149 @@
+<div class="page-header">
+  <div class="container">
+    <h1>拼车详情</h1>
+    <p>查看拼车信息详情并申请拼车</p>
+  </div>
+</div>
+
+<div class="container">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+    <button class="btn btn-secondary mt-1" (click)="goBack()">返回列表</button>
+  </div>
+
+  <div *ngIf="!loading && post" class="detail-container">
+    <div class="detail-card card">
+      <div class="detail-header">
+        <button class="btn btn-secondary back-btn" (click)="goBack()">← 返回</button>
+        <h2>{{ post.departure }} → {{ post.destination }}</h2>
+        <span class="badge badge-success">已发布</span>
+      </div>
+
+      <div class="detail-content">
+        <div class="info-section">
+          <h3>基本信息</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">出发时间</span>
+              <span class="info-value">{{ formatDateTime(post.departureTime) }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">总座位数</span>
+              <span class="info-value">{{ post.seats }} 座</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">可用座位</span>
+              <span class="info-value highlight">{{ post.availableSeats }} 座</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">发布时间</span>
+              <span class="info-value">{{ formatDateTime(post.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>联系方式</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">联系人</span>
+              <span class="info-value">{{ post.contactName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">联系电话</span>
+              <span class="info-value">{{ post.contactPhone }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="post.description" class="info-section">
+          <h3>备注说明</h3>
+          <p class="description">{{ post.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isOwner && post.availableSeats > 0" class="apply-card card">
+      <h3>申请拼车</h3>
+      
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="!isLoggedIn" class="login-prompt">
+        <p>请先登录后再申请拼车</p>
+        <a routerLink="/login" class="btn btn-primary">立即登录</a>
+      </div>
+
+      <form *ngIf="isLoggedIn" [formGroup]="applyForm" (ngSubmit)="onApply()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="applicantName">申请人姓名 *</label>
+            <input 
+              type="text" 
+              id="applicantName" 
+              formControlName="applicantName" 
+              class="form-control"
+            >
+            <div *ngIf="applyForm.get('applicantName')?.invalid && applyForm.get('applicantName')?.touched" class="text-danger text-small">
+              请输入申请人姓名
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="applicantPhone">联系电话 *</label>
+            <input 
+              type="tel" 
+              id="applicantPhone" 
+              formControlName="applicantPhone" 
+              class="form-control"
+            >
+            <div *ngIf="applyForm.get('applicantPhone')?.invalid && applyForm.get('applicantPhone')?.touched" class="text-danger text-small">
+              请输入正确的手机号
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="passengers">乘车人数 *</label>
+          <input 
+            type="number" 
+            id="passengers" 
+            formControlName="passengers" 
+            class="form-control"
+            min="1"
+            [max]="post.availableSeats"
+          >
+          <div *ngIf="applyForm.get('passengers')?.invalid && applyForm.get('passengers')?.touched" class="text-danger text-small">
+            请输入有效的乘车人数 (最多 {{ post.availableSeats }} 人)
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-full"
+          [disabled]="applyForm.invalid"
+        >
+          申请拼车
+        </button>
+      </form>
+    </div>
+
+    <div *ngIf="post.availableSeats === 0" class="card text-center">
+      <div class="full-seats-message">
+        <div class="full-icon">😔</div>
+        <h3>座位已满</h3>
+        <p>该拼车信息的座位已全部被预订</p>
+        <a routerLink="/carpool" class="btn btn-primary">查看其他拼车</a>
+      </div>
+    </div>
+  </div>
+</div>
