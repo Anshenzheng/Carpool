@@ -64,7 +64,7 @@
   </div>
 </div>
 
-<div *ngIf="getDepartureStats() && Object.keys(getDepartureStats()).length > 0" class="routes-section card">
+<div *ngIf="hasEntries(getDepartureStats())" class="routes-section card">
   <h3>热门出发地统计</h3>
   <div class="routes-list">
     <div *ngFor="let item of getDepartureStats() | keyvalue" class="route-item">
@@ -74,7 +74,7 @@
   </div>
 </div>
 
-<div *ngIf="getDestinationStats() && Object.keys(getDestinationStats()).length > 0" class="routes-section card">
+<div *ngIf="hasEntries(getDestinationStats())" class="routes-section card">
   <h3>热门目的地统计</h3>
   <div class="routes-list">
     <div *ngFor="let item of getDestinationStats() | keyvalue" class="route-item">
