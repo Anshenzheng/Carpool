@@ -82,4 +82,12 @@ export class AdminStatisticsComponent implements OnInit {
     const destination = this.routeStats.find(s => s.type === 'destination');
     return destination?.data || {};
   }
+
+  objectKeys(obj: { [key: string]: number }): string[] {
+    return Object.keys(obj);
+  }
+
+  hasEntries(obj: { [key: string]: number }): boolean {
+    return obj && Object.keys(obj).length > 0;
+  }
 }
