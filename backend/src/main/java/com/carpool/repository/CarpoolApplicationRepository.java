@@ -23,6 +23,12 @@ public interface CarpoolApplicationRepository extends JpaRepository<CarpoolAppli
     
     Optional<CarpoolApplication> findByPostAndUser(CarpoolPost post, User user);
     
+    @Query("SELECT COUNT(a) > 0 FROM CarpoolApplication a WHERE a.post = :post AND a.user = :user AND a.status IN (0, 1, 2)")
+    boolean existsActiveApplicationByPostAndUser(@Param("post") CarpoolPost post, @Param("user") User user);
+    
+    @Query("SELECT a FROM CarpoolApplication a WHERE a.post = :post AND a.user = :user AND a.status IN (0, 1, 2)")
+    Optional<CarpoolApplication> findActiveApplicationByPostAndUser(@Param("post") CarpoolPost post, @Param("user") User user);
+    
     @Query("SELECT COUNT(a) FROM CarpoolApplication a WHERE a.status = 1 AND a.post.departureTime BETWEEN :start AND :end")
     long countConfirmedByDepartureTimeBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
     

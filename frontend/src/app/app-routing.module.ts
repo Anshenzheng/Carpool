@@ -15,6 +15,7 @@ import { AdminPostsComponent } from './components/admin-posts/admin-posts.compon
 import { AdminStatisticsComponent } from './components/admin-statistics/admin-statistics.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { UserOnlyGuard } from './guards/user-only.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,10 +24,10 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'carpool', component: CarpoolListComponent },
   { path: 'carpool/:id', component: CarpoolDetailComponent },
-  { path: 'create-post', component: CreatePostComponent, canActivate: [AuthGuard] },
-  { path: 'my-posts', component: MyPostsComponent, canActivate: [AuthGuard] },
-  { path: 'my-applications', component: MyApplicationsComponent, canActivate: [AuthGuard] },
-  { path: 'received-applications', component: ReceivedApplicationsComponent, canActivate: [AuthGuard] },
+  { path: 'create-post', component: CreatePostComponent, canActivate: [UserOnlyGuard] },
+  { path: 'my-posts', component: MyPostsComponent, canActivate: [UserOnlyGuard] },
+  { path: 'my-applications', component: MyApplicationsComponent, canActivate: [UserOnlyGuard] },
+  { path: 'received-applications', component: ReceivedApplicationsComponent, canActivate: [UserOnlyGuard] },
   { 
     path: 'admin', 
     component: AdminDashboardComponent, 

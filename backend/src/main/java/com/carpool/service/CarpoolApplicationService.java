@@ -42,7 +42,7 @@ public class CarpoolApplicationService {
             throw new RuntimeException("不能申请自己发布的拼车");
         }
         
-        if (applicationRepository.existsByPostAndUser(post, currentUser)) {
+        if (applicationRepository.existsActiveApplicationByPostAndUser(post, currentUser)) {
             throw new RuntimeException("您已申请过该拼车");
         }
         
